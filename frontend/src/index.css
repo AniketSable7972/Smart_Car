@@ -1,0 +1,82 @@
+/* Tailwind Directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Import custom theme variables and styles */
+@import './styles/theme.css';
+
+/* Global styles */
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Floating shapes for LoginPage */
+.login-page {
+  position: relative;
+  overflow: hidden;
+}
+
+.login-page .floating-shape {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.3;
+  animation: float 15s ease-in-out infinite;
+  z-index: 1;
+}
+
+/* Shapes different sizes and positions */
+.login-page .shape1 {
+  width: 100px;
+  height: 100px;
+  background: #60a5fa; /* blue */
+  top: 10%;
+  left: 5%;
+  animation-duration: 18s;
+}
+
+.login-page .shape2 {
+  width: 150px;
+  height: 150px;
+  background: #3b82f6;
+  top: 30%;
+  right: 10%;
+  animation-duration: 20s;
+}
+
+.login-page .shape3 {
+  width: 80px;
+  height: 80px;
+  background: #93c5fd;
+  bottom: 20%;
+  left: 20%;
+  animation-duration: 22s;
+}
+
+.login-page .shape4 {
+  width: 120px;
+  height: 120px;
+  background: #3b82f6;
+  bottom: 10%;
+  right: 15%;
+  animation-duration: 25s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-20px) translateX(10px) rotate(180deg);
+  }
+}
