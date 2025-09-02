@@ -228,6 +228,9 @@ const TripManagementPage = () => {
                       {t.startPoint} → {t.endPoint}
                     </p>
                     <p className="text-sm text-gray-600 mb-1">
+                      Trip ID: <span className="font-medium">{t.id}</span>
+                    </p>
+                    <p className="text-sm text-gray-600 mb-1">
                       Driver: <span className="font-medium">{t.driverId}</span> {t.driverName && `(${t.driverName})`}
                     </p>
                     <p className="text-sm text-gray-600 mb-1">
@@ -277,3 +280,7 @@ const TripManagementPage = () => {
 };
 
 export default TripManagementPage;
+
+
+
+
