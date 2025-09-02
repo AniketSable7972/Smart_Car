@@ -1,3 +1,4 @@
+// RegisterPage.js
 import React, { useState } from "react";
 import api from "../api/client";
 import { useNavigate } from "react-router-dom";

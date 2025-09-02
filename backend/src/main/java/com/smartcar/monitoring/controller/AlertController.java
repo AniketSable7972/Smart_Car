@@ -1,3 +1,4 @@
+// AlertController.java
 package com.smartcar.monitoring.controller;
 
 import com.smartcar.monitoring.dto.*;
@@ -24,7 +25,7 @@ public class AlertController {
 
     @Autowired
     private AlertService alertService;
-    
+
     @Autowired
     private CarService carService;
 
@@ -37,9 +38,9 @@ public class AlertController {
         try {
             Car car = carService.getCarById(alertDto.getCarId());
             String message = "Alert for " + alertDto.getType() + " with severity " + alertDto.getSeverity();
-            
-            Alert createdAlert = alertService.createAlert(car, alertDto.getType(), 
-                                                        alertDto.getSeverity().toString(), message);
+
+            Alert createdAlert = alertService.createAlert(car, alertDto.getType(),
+                    alertDto.getSeverity().toString(), message);
             AlertDto createdAlertDto = new AlertDto(createdAlert);
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(ApiResponseDto.success("Alert created successfully", createdAlertDto));
@@ -188,11 +189,12 @@ public class AlertController {
             long totalAlerts = alertService.countTotalActiveAlerts();
             long unacknowledgedAlerts = alertService.countUnacknowledgedAlerts();
             long criticalAlerts = alertService.countCriticalAlerts();
-            
+
             class AlertStats {
                 public final long totalAlerts;
                 public final long unacknowledgedAlerts;
                 public final long criticalAlerts;
+
                 public AlertStats(long totalAlerts, long unacknowledgedAlerts, long criticalAlerts) {
                     this.totalAlerts = totalAlerts;
                     this.unacknowledgedAlerts = unacknowledgedAlerts;
@@ -215,12 +217,13 @@ public class AlertController {
             long mediumAlerts = alertService.countAlertsBySeverity(Alert.AlertSeverity.MEDIUM);
             long highAlerts = alertService.countAlertsBySeverity(Alert.AlertSeverity.HIGH);
             long criticalAlerts = alertService.countAlertsBySeverity(Alert.AlertSeverity.CRITICAL);
-            
+
             class AlertSeverityStats {
                 public final long lowAlerts;
                 public final long mediumAlerts;
                 public final long highAlerts;
                 public final long criticalAlerts;
+
                 public AlertSeverityStats(long lowAlerts, long mediumAlerts, long highAlerts, long criticalAlerts) {
                     this.lowAlerts = lowAlerts;
                     this.mediumAlerts = mediumAlerts;

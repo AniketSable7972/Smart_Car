@@ -1,3 +1,4 @@
+// AdminController.java
 package com.smartcar.monitoring.controller;
 
 import com.smartcar.monitoring.dto.*;
@@ -22,7 +23,7 @@ public class AdminController {
 
     @Autowired
     private AdminService adminService;
-    
+
     @Autowired
     private UserService userService;
 
@@ -34,7 +35,7 @@ public class AdminController {
             Admin admin = new Admin();
             admin.setUser(user);
             admin.setPermissions(adminDto.getPermissions());
-            
+
             Admin createdAdmin = adminService.createAdmin(admin);
             AdminDto createdAdminDto = new AdminDto(createdAdmin);
             return ResponseEntity.status(HttpStatus.CREATED)
@@ -89,11 +90,12 @@ public class AdminController {
 
     // PUT /api/admins/{id} - Update admin
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponseDto<AdminDto>> updateAdmin(@PathVariable Long id, @Valid @RequestBody AdminDto adminDto) {
+    public ResponseEntity<ApiResponseDto<AdminDto>> updateAdmin(@PathVariable Long id,
+            @Valid @RequestBody AdminDto adminDto) {
         try {
             Admin admin = new Admin();
             admin.setPermissions(adminDto.getPermissions());
-            
+
             Admin updatedAdmin = adminService.updateAdmin(id, admin);
             AdminDto updatedAdminDto = new AdminDto(updatedAdmin);
             return ResponseEntity.ok(ApiResponseDto.success("Admin updated successfully", updatedAdminDto));
@@ -147,9 +149,10 @@ public class AdminController {
     public ResponseEntity<ApiResponseDto<Object>> getAdminCountStats() {
         try {
             long totalAdmins = adminService.countActiveAdmins();
-            
+
             class AdminStats {
                 public final long totalAdmins;
+
                 public AdminStats(long totalAdmins) {
                     this.totalAdmins = totalAdmins;
                 }
@@ -164,8 +167,8 @@ public class AdminController {
 
     // PUT /api/admins/{id}/update-permissions - Update admin permissions
     @PutMapping("/{id}/update-permissions")
-    public ResponseEntity<ApiResponseDto<AdminDto>> updateAdminPermissions(@PathVariable Long id, 
-                                                                          @RequestParam String newPermissions) {
+    public ResponseEntity<ApiResponseDto<AdminDto>> updateAdminPermissions(@PathVariable Long id,
+            @RequestParam String newPermissions) {
         try {
             Admin admin = adminService.updateAdminPermissions(id, newPermissions);
             AdminDto adminDto = new AdminDto(admin);
@@ -178,7 +181,8 @@ public class AdminController {
 
     // GET /api/admins/search/permissions - Search admins by permissions
     @GetMapping("/search/permissions")
-    public ResponseEntity<ApiResponseDto<List<AdminDto>>> searchAdminsByPermissions(@RequestParam String permissionsPattern) {
+    public ResponseEntity<ApiResponseDto<List<AdminDto>>> searchAdminsByPermissions(
+            @RequestParam String permissionsPattern) {
         try {
             List<Admin> admins = adminService.getAdminsByPermissions(permissionsPattern);
             List<AdminDto> adminDtos = admins.stream()

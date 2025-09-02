@@ -1,3 +1,4 @@
+// WebSocketConfig.java
 package com.smartcar.monitoring.config;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -28,10 +29,10 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         // Enable simple memory-based message broker for sending messages to clients
         registry.enableSimpleBroker("/topic", "/queue");
-        
+
         // Set prefix for client-to-server messages
         registry.setApplicationDestinationPrefixes("/app");
-        
+
         // Set prefix for user-specific messages
         registry.setUserDestinationPrefix("/user");
     }

@@ -1,3 +1,4 @@
+// DataSeedConfig.java
 package com.smartcar.monitoring.config;
 
 import com.smartcar.monitoring.model.TripCost;
@@ -18,7 +19,7 @@ public class DataSeedConfig {
     @Autowired
     private TripCostRepository tripCostRepository;
 
-    private static final String[] PUNE_POINTS = new String[]{
+    private static final String[] PUNE_POINTS = new String[] {
             "Shivajinagar, Pune", "Kothrud, Pune", "Hinjewadi, Pune", "Viman Nagar, Pune", "Kalyani Nagar, Pune"
     };
 
@@ -27,7 +28,8 @@ public class DataSeedConfig {
         try {
             for (int i = 0; i < PUNE_POINTS.length; i++) {
                 for (int j = 0; j < PUNE_POINTS.length; j++) {
-                    if (i == j) continue;
+                    if (i == j)
+                        continue;
                     String start = PUNE_POINTS[i];
                     String end = PUNE_POINTS[j];
                     if (tripCostRepository.findByStartPointAndEndPointAndIsActiveTrue(start, end).isEmpty()) {

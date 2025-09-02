@@ -1,3 +1,4 @@
+// TelemetryController.java
 package com.smartcar.monitoring.controller;
 
 import com.smartcar.monitoring.dto.*;
@@ -22,7 +23,7 @@ public class TelemetryController {
 
     @Autowired
     private TelemetryService telemetryService;
-    
+
     @Autowired
     private CarService carService;
 
@@ -38,7 +39,7 @@ public class TelemetryController {
             telemetry.setTemperature(telemetryDto.getTemperature());
             telemetry.setLocation(telemetryDto.getLocation());
             telemetry.setTimestamp(telemetryDto.getTimestamp());
-            
+
             Telemetry createdTelemetry = telemetryService.createTelemetry(telemetry);
             TelemetryDto createdTelemetryDto = new TelemetryDto(createdTelemetry);
             return ResponseEntity.status(HttpStatus.CREATED)
@@ -114,7 +115,8 @@ public class TelemetryController {
             @RequestParam LocalDateTime startTime,
             @RequestParam LocalDateTime endTime) {
         try {
-            List<Telemetry> telemetryList = telemetryService.getTelemetryByCarAndTimestampRange(carId, startTime, endTime);
+            List<Telemetry> telemetryList = telemetryService.getTelemetryByCarAndTimestampRange(carId, startTime,
+                    endTime);
             List<TelemetryDto> telemetryDtos = telemetryList.stream()
                     .map(TelemetryDto::new)
                     .collect(Collectors.toList());
@@ -133,7 +135,8 @@ public class TelemetryController {
             List<TelemetryDto> telemetryDtos = telemetryList.stream()
                     .map(TelemetryDto::new)
                     .collect(Collectors.toList());
-            return ResponseEntity.ok(ApiResponseDto.success("Latest telemetry for all cars retrieved successfully", telemetryDtos));
+            return ResponseEntity
+                    .ok(ApiResponseDto.success("Latest telemetry for all cars retrieved successfully", telemetryDtos));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(ApiResponseDto.error("Failed to retrieve latest telemetry: " + e.getMessage()));
@@ -143,13 +146,16 @@ public class TelemetryController {
     // GET /api/telemetry/stats/car/{carId} - Get telemetry statistics for car
     @GetMapping("/stats/car/{carId}")
     public ResponseEntity<ApiResponseDto<Object>> getTelemetryStatsByCar(@PathVariable Long carId,
-                                                                        @RequestParam(required = false) LocalDateTime startTime,
-                                                                        @RequestParam(required = false) LocalDateTime endTime) {
+            @RequestParam(required = false) LocalDateTime startTime,
+            @RequestParam(required = false) LocalDateTime endTime) {
         try {
-            if (startTime == null) startTime = LocalDateTime.now().minusDays(7);
-            if (endTime == null) endTime = LocalDateTime.now();
-            
-            TelemetryService.TelemetryStatistics stats = telemetryService.getTelemetryStatistics(carId, startTime, endTime);
+            if (startTime == null)
+                startTime = LocalDateTime.now().minusDays(7);
+            if (endTime == null)
+                endTime = LocalDateTime.now();
+
+            TelemetryService.TelemetryStatistics stats = telemetryService.getTelemetryStatistics(carId, startTime,
+                    endTime);
             return ResponseEntity.ok(ApiResponseDto.success("Telemetry statistics retrieved successfully", stats));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -196,14 +202,16 @@ public class TelemetryController {
         }
     }
 
-    // GET /api/telemetry/trip/{tripId}/range - Get telemetry by trip ID and time range
+    // GET /api/telemetry/trip/{tripId}/range - Get telemetry by trip ID and time
+    // range
     @GetMapping("/trip/{tripId}/range")
     public ResponseEntity<ApiResponseDto<List<TelemetryDto>>> getTelemetryByTripAndTimeRange(
             @PathVariable Long tripId,
             @RequestParam LocalDateTime startTime,
             @RequestParam LocalDateTime endTime) {
         try {
-            List<Telemetry> telemetryList = telemetryService.getTelemetryByTripAndTimestampRange(tripId, startTime, endTime);
+            List<Telemetry> telemetryList = telemetryService.getTelemetryByTripAndTimestampRange(tripId, startTime,
+                    endTime);
             List<TelemetryDto> telemetryDtos = telemetryList.stream()
                     .map(TelemetryDto::new)
                     .collect(Collectors.toList());

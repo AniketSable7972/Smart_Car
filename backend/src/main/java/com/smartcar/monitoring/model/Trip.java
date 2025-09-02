@@ -1,3 +1,4 @@
+// Trip.java
 package com.smartcar.monitoring.model;
 
 import jakarta.persistence.*;
@@ -9,7 +10,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "trips")
 public class Trip {
-    
+
     public enum TripStatus {
         REQUESTED, APPROVED, REJECTED, ACTIVE, COMPLETED
     }
@@ -78,56 +79,138 @@ public class Trip {
     }
 
     // Getters and Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public Driver getDriver() { return driver; }
-    public void setDriver(Driver driver) { this.driver = driver; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public Car getCar() { return car; }
-    public void setCar(Car car) { this.car = car; }
+    public Driver getDriver() {
+        return driver;
+    }
 
-    public String getStartPoint() { return startPoint; }
-    public void setStartPoint(String startPoint) { this.startPoint = startPoint; }
+    public void setDriver(Driver driver) {
+        this.driver = driver;
+    }
 
-    public String getEndPoint() { return endPoint; }
-    public void setEndPoint(String endPoint) { this.endPoint = endPoint; }
+    public Car getCar() {
+        return car;
+    }
 
-    public TripStatus getStatus() { return status; }
-    public void setStatus(TripStatus status) { this.status = status; }
+    public void setCar(Car car) {
+        this.car = car;
+    }
 
-    public LocalDateTime getRequestedAt() { return requestedAt; }
-    public void setRequestedAt(LocalDateTime requestedAt) { this.requestedAt = requestedAt; }
+    public String getStartPoint() {
+        return startPoint;
+    }
 
-    public LocalDateTime getApprovedAt() { return approvedAt; }
-    public void setApprovedAt(LocalDateTime approvedAt) { this.approvedAt = approvedAt; }
+    public void setStartPoint(String startPoint) {
+        this.startPoint = startPoint;
+    }
 
-    public LocalDateTime getStartedAt() { return startedAt; }
-    public void setStartedAt(LocalDateTime startedAt) { this.startedAt = startedAt; }
+    public String getEndPoint() {
+        return endPoint;
+    }
 
-    public LocalDateTime getEndedAt() { return endedAt; }
-    public void setEndedAt(LocalDateTime endedAt) { this.endedAt = endedAt; }
+    public void setEndPoint(String endPoint) {
+        this.endPoint = endPoint;
+    }
 
-    public BigDecimal getBaseCost() { return baseCost; }
-    public void setBaseCost(BigDecimal baseCost) { this.baseCost = baseCost; }
+    public TripStatus getStatus() {
+        return status;
+    }
 
-    public BigDecimal getAdditionalFine() { return additionalFine; }
-    public void setAdditionalFine(BigDecimal additionalFine) { this.additionalFine = additionalFine; }
+    public void setStatus(TripStatus status) {
+        this.status = status;
+    }
 
-    public BigDecimal getTotalCost() { return totalCost; }
-    public void setTotalCost(BigDecimal totalCost) { this.totalCost = totalCost; }
+    public LocalDateTime getRequestedAt() {
+        return requestedAt;
+    }
 
-    public LocalDateTime getCreationDate() { return creationDate; }
-    public void setCreationDate(LocalDateTime creationDate) { this.creationDate = creationDate; }
+    public void setRequestedAt(LocalDateTime requestedAt) {
+        this.requestedAt = requestedAt;
+    }
 
-    public LocalDateTime getLastUpdateOn() { return lastUpdateOn; }
-    public void setLastUpdateOn(LocalDateTime lastUpdateOn) { this.lastUpdateOn = lastUpdateOn; }
+    public LocalDateTime getApprovedAt() {
+        return approvedAt;
+    }
 
-    public Boolean getIsActive() { return isActive; }
-    public void setIsActive(Boolean isActive) { this.isActive = isActive; }
+    public void setApprovedAt(LocalDateTime approvedAt) {
+        this.approvedAt = approvedAt;
+    }
+
+    public LocalDateTime getStartedAt() {
+        return startedAt;
+    }
+
+    public void setStartedAt(LocalDateTime startedAt) {
+        this.startedAt = startedAt;
+    }
+
+    public LocalDateTime getEndedAt() {
+        return endedAt;
+    }
+
+    public void setEndedAt(LocalDateTime endedAt) {
+        this.endedAt = endedAt;
+    }
+
+    public BigDecimal getBaseCost() {
+        return baseCost;
+    }
+
+    public void setBaseCost(BigDecimal baseCost) {
+        this.baseCost = baseCost;
+    }
+
+    public BigDecimal getAdditionalFine() {
+        return additionalFine;
+    }
+
+    public void setAdditionalFine(BigDecimal additionalFine) {
+        this.additionalFine = additionalFine;
+    }
+
+    public BigDecimal getTotalCost() {
+        return totalCost;
+    }
+
+    public void setTotalCost(BigDecimal totalCost) {
+        this.totalCost = totalCost;
+    }
+
+    public LocalDateTime getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public LocalDateTime getLastUpdateOn() {
+        return lastUpdateOn;
+    }
+
+    public void setLastUpdateOn(LocalDateTime lastUpdateOn) {
+        this.lastUpdateOn = lastUpdateOn;
+    }
+
+    public Boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
+    }
 
     @PreUpdate
-    public void preUpdate() { this.lastUpdateOn = LocalDateTime.now(); }
+    public void preUpdate() {
+        this.lastUpdateOn = LocalDateTime.now();
+    }
 
     @Override
     public String toString() {

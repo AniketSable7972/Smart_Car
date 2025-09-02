@@ -1,3 +1,4 @@
+// MqttService.java
 package com.smartcar.monitoring.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -184,7 +185,10 @@ public class MqttService {
 
             if (createdAlert != null && createdAlert.getSeverity() == Alert.AlertSeverity.CRITICAL) {
                 webSocketService.sendCriticalAlertToAdmins(createdAlert);
-                try { tripService.addFineForCritical(carId, 100); } catch (Exception ignore) {}
+                try {
+                    tripService.addFineForCritical(carId, 100);
+                } catch (Exception ignore) {
+                }
             }
 
             logger.info("Telemetry processed for car {} with trip {}", carId, telemetryDto.getTripId());
@@ -208,7 +212,7 @@ public class MqttService {
     private Alert checkAndCreateAlerts(Car car, TelemetryDto telemetryDto) {
         try {
             Alert createdAlert = null;
-            
+
             // Get the active trip for this car to link alerts
             Trip activeTrip = null;
             try {
@@ -216,30 +220,63 @@ public class MqttService {
             } catch (Exception e) {
                 logger.warn("Could not get active trip for car {}: {}", car.getId(), e.getMessage());
             }
-            
+
             if (telemetryDto.getFuelLevel() < 20) {
                 String msg = "Low fuel level: " + telemetryDto.getFuelLevel() + "%";
-                Alert.AlertSeverity sev = telemetryDto.getFuelLevel() < 10 ? Alert.AlertSeverity.CRITICAL : Alert.AlertSeverity.HIGH;
+                Alert.AlertSeverity sev = telemetryDto.getFuelLevel() < 10 ? Alert.AlertSeverity.CRITICAL
+                        : Alert.AlertSeverity.HIGH;
                 createdAlert = alertService.createAlert(car, activeTrip, "LOW_FUEL", sev.toString(), msg);
                 webSocketService.broadcastAlertUpdate(createdAlert);
-                if (sev == Alert.AlertSeverity.HIGH) { try { tripService.addFineForCritical(car.getId(), 10); } catch (Exception ignore) {} }
-                if (sev == Alert.AlertSeverity.CRITICAL) { try { tripService.addFineForCritical(car.getId(), 20); } catch (Exception ignore) {} }
+                if (sev == Alert.AlertSeverity.HIGH) {
+                    try {
+                        tripService.addFineForCritical(car.getId(), 10);
+                    } catch (Exception ignore) {
+                    }
+                }
+                if (sev == Alert.AlertSeverity.CRITICAL) {
+                    try {
+                        tripService.addFineForCritical(car.getId(), 20);
+                    } catch (Exception ignore) {
+                    }
+                }
             }
             if (telemetryDto.getTemperature() > 100) {
                 String msg = "High temperature: " + telemetryDto.getTemperature() + "°C";
-                Alert.AlertSeverity sev = telemetryDto.getTemperature() > 110 ? Alert.AlertSeverity.CRITICAL : Alert.AlertSeverity.HIGH;
+                Alert.AlertSeverity sev = telemetryDto.getTemperature() > 110 ? Alert.AlertSeverity.CRITICAL
+                        : Alert.AlertSeverity.HIGH;
                 createdAlert = alertService.createAlert(car, activeTrip, "HIGH_TEMPERATURE", sev.toString(), msg);
                 webSocketService.broadcastAlertUpdate(createdAlert);
-                if (sev == Alert.AlertSeverity.HIGH) { try { tripService.addFineForCritical(car.getId(), 10); } catch (Exception ignore) {} }
-                if (sev == Alert.AlertSeverity.CRITICAL) { try { tripService.addFineForCritical(car.getId(), 20); } catch (Exception ignore) {} }
+                if (sev == Alert.AlertSeverity.HIGH) {
+                    try {
+                        tripService.addFineForCritical(car.getId(), 10);
+                    } catch (Exception ignore) {
+                    }
+                }
+                if (sev == Alert.AlertSeverity.CRITICAL) {
+                    try {
+                        tripService.addFineForCritical(car.getId(), 20);
+                    } catch (Exception ignore) {
+                    }
+                }
             }
             if (telemetryDto.getSpeed() > 120) {
                 String msg = "High speed: " + telemetryDto.getSpeed() + " km/h";
-                Alert.AlertSeverity sev = telemetryDto.getSpeed() > 150 ? Alert.AlertSeverity.CRITICAL : Alert.AlertSeverity.HIGH;
+                Alert.AlertSeverity sev = telemetryDto.getSpeed() > 150 ? Alert.AlertSeverity.CRITICAL
+                        : Alert.AlertSeverity.HIGH;
                 createdAlert = alertService.createAlert(car, activeTrip, "HIGH_SPEED", sev.toString(), msg);
                 webSocketService.broadcastAlertUpdate(createdAlert);
-                if (sev == Alert.AlertSeverity.HIGH) { try { tripService.addFineForCritical(car.getId(), 10); } catch (Exception ignore) {} }
-                if (sev == Alert.AlertSeverity.CRITICAL) { try { tripService.addFineForCritical(car.getId(), 20); } catch (Exception ignore) {} }
+                if (sev == Alert.AlertSeverity.HIGH) {
+                    try {
+                        tripService.addFineForCritical(car.getId(), 10);
+                    } catch (Exception ignore) {
+                    }
+                }
+                if (sev == Alert.AlertSeverity.CRITICAL) {
+                    try {
+                        tripService.addFineForCritical(car.getId(), 20);
+                    } catch (Exception ignore) {
+                    }
+                }
             }
             return createdAlert;
         } catch (Exception e) {

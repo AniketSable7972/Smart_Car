@@ -1,3 +1,4 @@
+// DriverController.java
 package com.smartcar.monitoring.controller;
 
 import com.smartcar.monitoring.dto.*;
@@ -22,7 +23,7 @@ public class DriverController {
 
     @Autowired
     private DriverService driverService;
-    
+
     @Autowired
     private UserService userService;
 
@@ -34,7 +35,7 @@ public class DriverController {
             Driver driver = new Driver();
             driver.setUser(user);
             driver.setAssignedCarId(driverDto.getAssignedCarId());
-            
+
             Driver createdDriver = driverService.createDriver(driver);
             DriverDto createdDriverDto = new DriverDto(createdDriver);
             return ResponseEntity.status(HttpStatus.CREATED)
@@ -89,11 +90,12 @@ public class DriverController {
 
     // PUT /api/drivers/{id} - Update driver
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponseDto<DriverDto>> updateDriver(@PathVariable Long id, @Valid @RequestBody DriverDto driverDto) {
+    public ResponseEntity<ApiResponseDto<DriverDto>> updateDriver(@PathVariable Long id,
+            @Valid @RequestBody DriverDto driverDto) {
         try {
             Driver driver = new Driver();
             driver.setAssignedCarId(driverDto.getAssignedCarId());
-            
+
             Driver updatedDriver = driverService.updateDriver(id, driver);
             DriverDto updatedDriverDto = new DriverDto(updatedDriver);
             return ResponseEntity.ok(ApiResponseDto.success("Driver updated successfully", updatedDriverDto));
@@ -129,8 +131,8 @@ public class DriverController {
 
     // PUT /api/drivers/{id}/assign-car - Assign car to driver
     @PutMapping("/{id}/assign-car")
-    public ResponseEntity<ApiResponseDto<DriverDto>> assignCarToDriver(@PathVariable Long id, 
-                                                                     @RequestParam Long carId) {
+    public ResponseEntity<ApiResponseDto<DriverDto>> assignCarToDriver(@PathVariable Long id,
+            @RequestParam Long carId) {
         try {
             Driver driver = driverService.assignCarToDriver(id, carId);
             DriverDto driverDto = new DriverDto(driver);
@@ -191,11 +193,12 @@ public class DriverController {
             long totalDrivers = driverService.countActiveDrivers();
             long availableDrivers = driverService.countDriversWithoutCars();
             long assignedDrivers = driverService.countDriversWithCars();
-            
+
             class DriverStats {
                 public final long totalDrivers;
                 public final long availableDrivers;
                 public final long assignedDrivers;
+
                 public DriverStats(long totalDrivers, long availableDrivers, long assignedDrivers) {
                     this.totalDrivers = totalDrivers;
                     this.availableDrivers = availableDrivers;
@@ -215,7 +218,8 @@ public class DriverController {
     public ResponseEntity<ApiResponseDto<Object>> getDetailedDriverStats() {
         try {
             DriverService.DriverStatistics stats = driverService.getDriverStatistics();
-            return ResponseEntity.ok(ApiResponseDto.success("Detailed driver statistics retrieved successfully", stats));
+            return ResponseEntity
+                    .ok(ApiResponseDto.success("Detailed driver statistics retrieved successfully", stats));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(ApiResponseDto.error("Failed to retrieve detailed driver statistics: " + e.getMessage()));

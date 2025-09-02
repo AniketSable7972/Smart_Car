@@ -1,3 +1,4 @@
+// TelemetrySimulator.java
 package com.smartcar.monitoring.simulator;
 
 import com.smartcar.monitoring.dto.TelemetryDto;
@@ -46,7 +47,7 @@ public class TelemetrySimulator {
     private final AtomicBoolean isRunning = new AtomicBoolean(false);
 
     private final String[] locations = {
-        "Shivajinagar, Pune", "Kothrud, Pune", "Hinjewadi, Pune", "Viman Nagar, Pune", "Kalyani Nagar, Pune"
+            "Shivajinagar, Pune", "Kothrud, Pune", "Hinjewadi, Pune", "Viman Nagar, Pune", "Kalyani Nagar, Pune"
     };
 
     private final Map<Long, TelemetryDto> lastByCarId = new HashMap<>();
@@ -70,7 +71,8 @@ public class TelemetrySimulator {
 
     @Scheduled(fixedDelayString = "${simulator.interval:5000}")
     public void simulateTelemetry() {
-        if (!simulatorEnabled || !isRunning.get()) return;
+        if (!simulatorEnabled || !isRunning.get())
+            return;
 
         try {
             List<Car> activeCars = carService.getCarsByStatus("ACTIVE");
@@ -130,16 +132,28 @@ public class TelemetrySimulator {
         int targetMinSpeed = 60;
         int speedStep = 3;
         int nextSpeed = prev.getSpeed() + (ps.speedDir > 0 ? speedStep : -speedStep);
-        if (ps.speedDir > 0 && nextSpeed >= targetMaxSpeed) { ps.speedDir = -1; nextSpeed = targetMaxSpeed; }
-        if (ps.speedDir < 0 && nextSpeed <= targetMinSpeed) { ps.speedDir = +1; nextSpeed = targetMinSpeed; }
+        if (ps.speedDir > 0 && nextSpeed >= targetMaxSpeed) {
+            ps.speedDir = -1;
+            nextSpeed = targetMaxSpeed;
+        }
+        if (ps.speedDir < 0 && nextSpeed <= targetMinSpeed) {
+            ps.speedDir = +1;
+            nextSpeed = targetMinSpeed;
+        }
         nextSpeed = clamp(nextSpeed, 0, 170);
 
         int targetMaxTemp = 120;
         int targetMinTemp = 80;
         int tempStep = 2;
         int nextTemp = prev.getTemperature() + (ps.tempDir > 0 ? tempStep : -tempStep);
-        if (ps.tempDir > 0 && nextTemp >= targetMaxTemp) { ps.tempDir = -1; nextTemp = targetMaxTemp; }
-        if (ps.tempDir < 0 && nextTemp <= targetMinTemp) { ps.tempDir = +1; nextTemp = targetMinTemp; }
+        if (ps.tempDir > 0 && nextTemp >= targetMaxTemp) {
+            ps.tempDir = -1;
+            nextTemp = targetMaxTemp;
+        }
+        if (ps.tempDir < 0 && nextTemp <= targetMinTemp) {
+            ps.tempDir = +1;
+            nextTemp = targetMinTemp;
+        }
         nextTemp = clamp(nextTemp, -5, 130);
 
         int nextFuel;
@@ -148,7 +162,9 @@ public class TelemetrySimulator {
             ps.fuelResetPending = false;
         } else {
             nextFuel = clamp(prev.getFuelLevel() - randBetween(1, 2), 0, 100);
-            if (nextFuel == 0) { ps.fuelResetPending = true; }
+            if (nextFuel == 0) {
+                ps.fuelResetPending = true;
+            }
         }
 
         String location = nextLocation(prev.getLocation());

@@ -1,3 +1,4 @@
+// HistoryPage.js
 import React, { useEffect, useMemo, useState } from "react";
 import { Calendar } from "lucide-react";
 import api from "../api/client";
@@ -53,7 +54,7 @@ const HistoryPage = ({ user }) => {
             activeTripId = tRes?.data?.data?.id || null;
             setTripId(activeTripId);
           }
-        } catch (_) {}
+        } catch (_) { }
       }
       if (activeTripId) {
         const tRes = await api.get(`/telemetry/trip/${activeTripId}`);
@@ -114,7 +115,7 @@ const HistoryPage = ({ user }) => {
             <p className="text-gray-600">{user.role === 'DRIVER' ? `Car ${carId}` : 'Fleet'}</p>
           </div>
           <div className="flex gap-4 mt-4 md:mt-0">
-            <select className="border px-3 py-2 rounded" value={timeRange} onChange={(e)=>setTimeRange(e.target.value)}>
+            <select className="border px-3 py-2 rounded" value={timeRange} onChange={(e) => setTimeRange(e.target.value)}>
               <option value="24h">Last 24 hours</option>
               <option value="7d">Last 7 days</option>
               <option value="30d">Last 30 days</option>
@@ -176,9 +177,9 @@ const HistoryPage = ({ user }) => {
             </table>
           </div>
           <div className="flex items-center justify-center gap-2 mt-3">
-            <button className="px-3 py-1 border rounded disabled:opacity-50" onClick={() => setPage(p => Math.max(1, p-1))} disabled={page === 1}>Prev</button>
+            <button className="px-3 py-1 border rounded disabled:opacity-50" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}>Prev</button>
             <span className="text-sm">Page {page} of {totalPages}</span>
-            <button className="px-3 py-1 border rounded disabled:opacity-50" onClick={() => setPage(p => Math.min(totalPages, p+1))} disabled={page === totalPages}>Next</button>
+            <button className="px-3 py-1 border rounded disabled:opacity-50" onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages}>Next</button>
           </div>
         </div>
       </div>

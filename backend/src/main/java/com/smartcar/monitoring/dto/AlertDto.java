@@ -1,3 +1,4 @@
+// AlertDto.java
 package com.smartcar.monitoring.dto;
 
 import com.smartcar.monitoring.model.Alert;
@@ -33,7 +34,8 @@ public class AlertDto {
     private Boolean isActive;
 
     // Default constructor
-    public AlertDto() {}
+    public AlertDto() {
+    }
 
     // Constructor from Alert entity
     public AlertDto(Alert alert) {
@@ -54,41 +56,107 @@ public class AlertDto {
     }
 
     // Getters and Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public Long getCarId() { return carId; }
-    public void setCarId(Long carId) { this.carId = carId; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public Long getTripId() { return tripId; }
-    public void setTripId(Long tripId) { this.tripId = tripId; }
+    public Long getCarId() {
+        return carId;
+    }
 
-    public String getCarLicensePlate() { return carLicensePlate; }
-    public void setCarLicensePlate(String carLicensePlate) { this.carLicensePlate = carLicensePlate; }
+    public void setCarId(Long carId) {
+        this.carId = carId;
+    }
 
-    public String getType() { return type; }
-    public void setType(String type) { this.type = type; }
+    public Long getTripId() {
+        return tripId;
+    }
 
-    public Alert.AlertSeverity getSeverity() { return severity; }
-    public void setSeverity(Alert.AlertSeverity severity) { this.severity = severity; }
+    public void setTripId(Long tripId) {
+        this.tripId = tripId;
+    }
 
-    public LocalDateTime getTimestamp() { return timestamp; }
-    public void setTimestamp(LocalDateTime timestamp) { this.timestamp = timestamp; }
+    public String getCarLicensePlate() {
+        return carLicensePlate;
+    }
 
-    public Boolean getAcknowledged() { return acknowledged; }
-    public void setAcknowledged(Boolean acknowledged) { this.acknowledged = acknowledged; }
+    public void setCarLicensePlate(String carLicensePlate) {
+        this.carLicensePlate = carLicensePlate;
+    }
 
-    public LocalDateTime getCreationDate() { return creationDate; }
-    public void setCreationDate(LocalDateTime creationDate) { this.creationDate = creationDate; }
+    public String getType() {
+        return type;
+    }
 
-    public LocalDateTime getLastUpdateOn() { return lastUpdateOn; }
-    public void setLastUpdateOn(LocalDateTime lastUpdateOn) { this.lastUpdateOn = lastUpdateOn; }
+    public void setType(String type) {
+        this.type = type;
+    }
 
-    public Boolean getIsActive() { return isActive; }
-    public void setIsActive(Boolean isActive) { this.isActive = isActive; }
+    public Alert.AlertSeverity getSeverity() {
+        return severity;
+    }
 
-    public String getCarNumber() { return carNumber; }
-    public void setCarNumber(String carNumber) { this.carNumber = carNumber; }
-    public String getCarModel() { return carModel; }
-    public void setCarModel(String carModel) { this.carModel = carModel; }
+    public void setSeverity(Alert.AlertSeverity severity) {
+        this.severity = severity;
+    }
+
+    public LocalDateTime getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public Boolean getAcknowledged() {
+        return acknowledged;
+    }
+
+    public void setAcknowledged(Boolean acknowledged) {
+        this.acknowledged = acknowledged;
+    }
+
+    public LocalDateTime getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public LocalDateTime getLastUpdateOn() {
+        return lastUpdateOn;
+    }
+
+    public void setLastUpdateOn(LocalDateTime lastUpdateOn) {
+        this.lastUpdateOn = lastUpdateOn;
+    }
+
+    public Boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
+    }
+
+    public String getCarNumber() {
+        return carNumber;
+    }
+
+    public void setCarNumber(String carNumber) {
+        this.carNumber = carNumber;
+    }
+
+    public String getCarModel() {
+        return carModel;
+    }
+
+    public void setCarModel(String carModel) {
+        this.carModel = carModel;
+    }
 }

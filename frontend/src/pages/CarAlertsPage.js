@@ -1,3 +1,4 @@
+// CarAlertsPage.js
 import React, { useEffect, useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { AlertTriangle, Fuel, Thermometer, Wrench, Zap } from "lucide-react";

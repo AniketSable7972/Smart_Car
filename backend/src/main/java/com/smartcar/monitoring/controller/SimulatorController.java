@@ -1,3 +1,4 @@
+// SimulatorController.java
 package com.smartcar.monitoring.controller;
 
 import com.smartcar.monitoring.dto.ApiResponseDto;
@@ -39,7 +40,8 @@ public class SimulatorController {
             String status = isRunning ? "RUNNING" : "STOPPED";
 
             SimulatorStatus simulatorStatus = new SimulatorStatus(isRunning, mqttConnected, status);
-            return ResponseEntity.ok(ApiResponseDto.success("Simulator status retrieved successfully", simulatorStatus));
+            return ResponseEntity
+                    .ok(ApiResponseDto.success("Simulator status retrieved successfully", simulatorStatus));
         } catch (Exception e) {
             return ResponseEntity.status(500)
                     .body(ApiResponseDto.error("Failed to get simulator status: " + e.getMessage()));
@@ -91,8 +93,8 @@ public class SimulatorController {
                 }
             }
 
-            ToggleResponse response = new ToggleResponse(!currentStatus, 
-                currentStatus ? "Simulator stopped" : "Simulator started");
+            ToggleResponse response = new ToggleResponse(!currentStatus,
+                    currentStatus ? "Simulator stopped" : "Simulator started");
 
             return ResponseEntity.ok(ApiResponseDto.success("Simulator toggled successfully", response));
         } catch (Exception e) {
@@ -131,7 +133,8 @@ public class SimulatorController {
     public ResponseEntity<ApiResponseDto<String>> generateTestData(@RequestParam Long carId) {
         try {
             // This would trigger immediate generation of test data for a specific car
-            // For now, we'll just return success as the simulator handles this automatically
+            // For now, we'll just return success as the simulator handles this
+            // automatically
             return ResponseEntity.ok(ApiResponseDto.success("Test data generation triggered for car: " + carId));
         } catch (Exception e) {
             return ResponseEntity.status(500)
