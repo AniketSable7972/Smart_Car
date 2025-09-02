@@ -239,23 +239,39 @@ const AdminDashboard = () => {
                                     {criticalUnack.length === 0 && (
                                         <p className="text-sm text-gray-500 text-center">No critical alerts 🎉</p>
                                     )}
-                                    {criticalUnack.map((a) => (
-                                        <div key={a.id} className="p-3 border rounded-xl mb-2 bg-white shadow-sm hover:shadow-md transition">
-                                            <div className="flex items-center justify-between">
-                                                <div>
-                                                    <div className="text-sm font-medium">{a.type}</div>
-                                                    <div className="text-xs text-gray-500">{a.timestamp}</div>
+                                    {criticalUnack
+                                        .slice() // shallow copy so we don't mutate original state
+                                        .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)) // latest first
+                                        .map((a) => (
+                                            <div key={a.id} className="p-3 border rounded-xl mb-2 bg-white shadow-sm hover:shadow-md transition">
+                                                <div className="flex items-center justify-between">
+                                                    <div>
+                                                        <div className="text-sm font-medium">{a.type}</div>
+                                                        <div className="text-xs text-gray-500">
+                                                            {new Date(a.timestamp).toLocaleString("en-IN", {
+                                                                day: "2-digit",
+                                                                month: "2-digit",
+                                                                year: "numeric",
+                                                                hour: "2-digit",
+                                                                minute: "2-digit",
+                                                                second: "2-digit",
+                                                                hour12: true,
+                                                            })}
+                                                        </div>
+                                                    </div>
+                                                    <button
+                                                        className="text-xs px-2 py-1 border rounded hover:bg-gray-100"
+                                                        onClick={() => acknowledgeAlert(a.id)}
+                                                    >
+                                                        Acknowledge
+                                                    </button>
                                                 </div>
-                                                <button
-                                                    className="text-xs px-2 py-1 border rounded hover:bg-gray-100"
-                                                    onClick={() => acknowledgeAlert(a.id)}
-                                                >Acknowledge</button>
                                             </div>
-                                        </div>
-                                    ))}
+                                        ))}
                                 </div>
                             </div>
                         )}
+
                     </div>
                 </div>
 
