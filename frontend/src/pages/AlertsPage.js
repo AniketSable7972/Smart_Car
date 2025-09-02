@@ -1,4 +1,4 @@
-// AlertsPage.js
+// ALertPage.js
 import React, { useState, useEffect, useMemo } from "react";
 import { AlertTriangle, Fuel, Thermometer, Wrench, Zap, Clock, Car as CarIcon } from "lucide-react";
 import api from "../api/client";
