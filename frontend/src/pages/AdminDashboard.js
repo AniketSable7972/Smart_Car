@@ -14,22 +14,17 @@ const AdminDashboard = () => {
     const [criticalUnack, setCriticalUnack] = useState([]);
     const [carsById, setCarsById] = useState({});
 
-    // 👇 ref for notification panel
     const notifRef = useRef(null);
 
-    // 👇 close on outside click
+    // Close notifications on outside click
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (notifRef.current && !notifRef.current.contains(event.target)) {
                 setNotifOpen(false);
             }
         };
-        if (notifOpen) {
-            document.addEventListener("mousedown", handleClickOutside);
-        }
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
+        if (notifOpen) document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
     }, [notifOpen]);
 
     const fetchData = async () => {
@@ -43,20 +38,22 @@ const AdminDashboard = () => {
 
             const telemetryList = telemetryRes?.data?.data || [];
             const activeCars = carsRes?.data?.data || [];
-            const activeCarIdSet = new Set((activeCars || []).map((c) => c.id));
+            const activeCarIdSet = new Set(activeCars.map((c) => c.id));
             const activeTelemetry = telemetryList.filter((t) => activeCarIdSet.has(t.carId));
 
             const drivers = (driversRes?.data?.data || []).reduce((acc, d) => {
                 if (d.assignedCarId) acc[d.assignedCarId] = d.name || d.username;
                 return acc;
             }, {});
+
             const counts = alertsStatsRes?.data?.data || { totalAlerts: 0, unacknowledgedAlerts: 0, criticalAlerts: 0 };
 
-            const carStatusById = (activeCars || []).reduce((acc, c) => {
+            const carStatusById = activeCars.reduce((acc, c) => {
                 acc[c.id] = c.status || "";
                 return acc;
             }, {});
-            const carMap = (activeCars || []).reduce((acc, c) => { acc[c.id] = c; return acc; }, {});
+
+            const carMap = activeCars.reduce((acc, c) => { acc[c.id] = c; return acc; }, {});
 
             const rows = activeTelemetry.map(t => {
                 let formattedTime = "-";
@@ -94,25 +91,30 @@ const AdminDashboard = () => {
             setDriversByCarId(drivers);
             setCarsById(carMap);
             setAlertCounts(counts);
-        } catch (e) { }
+        } catch (e) { console.error(e); }
     };
 
     useEffect(() => { fetchData(); }, []);
 
+    // Load critical alerts
     useEffect(() => {
         const loadCritical = async () => {
             try {
                 const res = await api.get('/alerts/critical');
                 const list = (res?.data?.data || [])
                     .filter(a => !a.acknowledged)
-                    .filter(a => String(a.severity || '').toUpperCase() === 'CRITICAL');
+                    .filter(a => String(a.severity || '').toUpperCase() === 'CRITICAL')
+                    .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)); // latest first
                 setCriticalUnack(list);
-            } catch (_) { setCriticalUnack([]); }
+            } catch (_) {
+                setCriticalUnack([]);
+            }
         };
         loadCritical();
         const id = setInterval(loadCritical, 30000);
         return () => clearInterval(id);
     }, []);
+
 
     const acknowledgeAlert = async (id) => {
         try {
@@ -145,21 +147,12 @@ const AdminDashboard = () => {
         });
     }, [vehicles, searchTerm]);
 
-    const activeCount = vehicles.filter((v) => String(v.status || "").toLowerCase() === "active").length;
-    const idleCount = vehicles.filter((v) => String(v.status || "").toLowerCase() === "idle").length;
-    const maintenanceCount = vehicles.filter((v) => String(v.status || "").toLowerCase() === "under maintainance").length;
+    const activeCount = vehicles.filter(v => String(v.status || "").toLowerCase() === "active").length;
+    const idleCount = vehicles.filter(v => String(v.status || "").toLowerCase() === "idle").length;
+    const maintenanceCount = vehicles.filter(v => String(v.status || "").toLowerCase() === "under maintainance").length;
 
-    const getFuelColor = (fuel) => {
-        if (fuel > 50) return "green";
-        if (fuel > 25) return "orange";
-        return "red";
-    };
-
-    const getTempColor = (temp) => {
-        if (temp <= 95) return "green";
-        if (temp <= 100) return "orange";
-        return "red";
-    };
+    const getFuelColor = (fuel) => fuel > 50 ? "green" : fuel > 25 ? "orange" : "red";
+    const getTempColor = (temp) => temp <= 95 ? "green" : temp <= 100 ? "orange" : "red";
 
     return (
         <div className="pt-16 bg-gray-100 min-h-screen">
@@ -239,43 +232,39 @@ const AdminDashboard = () => {
                                     {criticalUnack.length === 0 && (
                                         <p className="text-sm text-gray-500 text-center">No critical alerts 🎉</p>
                                     )}
-                                    {criticalUnack
-                                        .slice() // shallow copy so we don't mutate original state
-                                        .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)) // latest first
-                                        .map((a) => (
-                                            <div key={a.id} className="p-3 border rounded-xl mb-2 bg-white shadow-sm hover:shadow-md transition">
-                                                <div className="flex items-center justify-between">
-                                                    <div>
-                                                        <div className="text-sm font-medium">{a.type}</div>
-                                                        <div className="text-xs text-gray-500">
-                                                            {new Date(a.timestamp).toLocaleString("en-IN", {
-                                                                day: "2-digit",
-                                                                month: "2-digit",
-                                                                year: "numeric",
-                                                                hour: "2-digit",
-                                                                minute: "2-digit",
-                                                                second: "2-digit",
-                                                                hour12: true,
-                                                            })}
-                                                        </div>
+                                    {criticalUnack.map((a) => (
+                                        <div key={a.id} className="p-3 border rounded-xl mb-2 bg-white shadow-sm hover:shadow-md transition">
+                                            <div className="flex items-center justify-between">
+                                                <div>
+                                                    <div className="text-sm font-medium">{a.type}</div>
+                                                    <div className="text-xs text-gray-500">
+                                                        {new Date(a.timestamp).toLocaleString("en-IN", {
+                                                            day: "2-digit",
+                                                            month: "2-digit",
+                                                            year: "numeric",
+                                                            hour: "2-digit",
+                                                            minute: "2-digit",
+                                                            second: "2-digit",
+                                                            hour12: true,
+                                                        })}
                                                     </div>
-                                                    <button
-                                                        className="text-xs px-2 py-1 border rounded hover:bg-gray-100"
-                                                        onClick={() => acknowledgeAlert(a.id)}
-                                                    >
-                                                        Acknowledge
-                                                    </button>
                                                 </div>
+                                                <button
+                                                    className="text-xs px-2 py-1 border rounded hover:bg-gray-100"
+                                                    onClick={() => acknowledgeAlert(a.id)}
+                                                >
+                                                    Acknowledge
+                                                </button>
                                             </div>
-                                        ))}
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
                         )}
-
                     </div>
                 </div>
 
-                {/* Modern Styled Table */}
+                {/* Vehicles Table */}
                 <div className="overflow-x-auto rounded-2xl shadow-lg border border-gray-200">
                     <table className="w-full border-collapse text-sm text-gray-700">
                         <thead className="sticky top-0 bg-gray-100 shadow-sm text-gray-600 text-[13px] uppercase tracking-wide">
@@ -284,7 +273,7 @@ const AdminDashboard = () => {
                                 <th className="px-4 py-3 text-left">Car Number</th>
                                 <th className="px-4 py-3 text-left">Car Model</th>
                                 <th className="px-4 py-3 text-left">Driver</th>
-                                <th className="px-4fuel py-3 text-left">Location</th>
+                                <th className="px-4 py-3 text-left">Location</th>
                                 <th className="px-4 py-3 text-center">Speed</th>
                                 <th className="px-4 py-3 text-center">Fuel</th>
                                 <th className="px-4 py-3 text-center">Engine Temp</th>
@@ -296,8 +285,7 @@ const AdminDashboard = () => {
                             {filteredVehicles.map((v, i) => (
                                 <tr
                                     key={i}
-                                    className={`transition-colors ${i % 2 === 0 ? "bg-white" : "bg-gray-50"
-                                        } hover:bg-blue-50`}
+                                    className={`transition-colors ${i % 2 === 0 ? "bg-white" : "bg-gray-50"} hover:bg-blue-50`}
                                 >
                                     <td className="px-4 py-3">{v.id}</td>
                                     <td className="px-4 py-3 font-medium text-gray-800">{v.carNumber}</td>
@@ -314,14 +302,12 @@ const AdminDashboard = () => {
                                             <span style={{ color: getFuelColor(v.fuel) }}>{v.fuel}%</span>
                                         </div>
                                     </td>
-
                                     <td className="px-4 py-3 text-center">
                                         <div className="flex items-center justify-center gap-1">
                                             <FaThermometerHalf size={14} className="text-gray-500" />
                                             <span style={{ color: getTempColor(v.temp) }}>{v.temp}°C</span>
                                         </div>
                                     </td>
-
                                     <td className="px-4 py-3 text-center">
                                         {(() => {
                                             const s = String(v.status || "").toLowerCase();
@@ -347,10 +333,11 @@ const AdminDashboard = () => {
                         </tbody>
                     </table>
                 </div>
-
             </div>
         </div>
     );
 };
 
 export default AdminDashboard;
+
+
