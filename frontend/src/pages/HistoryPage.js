@@ -189,3 +189,4 @@ const HistoryPage = ({ user }) => {
 
 export default HistoryPage;
 
+
