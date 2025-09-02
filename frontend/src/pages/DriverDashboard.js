@@ -207,6 +207,7 @@ const DriverDashboard = ({ user }) => {
         ))}
       </div>
 
+
       {/* Recent Alerts */}
       <div className="bg-white p-6 rounded-2xl shadow-lg mb-10">
         <div className="flex items-center justify-between mb-4">
@@ -221,33 +222,57 @@ const DriverDashboard = ({ user }) => {
         {recentAlerts.length === 0 ? (
           <p className="text-gray-500 text-sm text-center">No recent alerts 🎉</p>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="flex flex-col gap-3">
             {recentAlerts.map((a) => {
               const typeLower = (a.type || "").toLowerCase();
               const color = typeLower.includes("fuel") ? "green" : typeLower.includes("temp") ? "orange" : "blue";
               const Icon = typeLower.includes("fuel") ? Fuel : typeLower.includes("temp") ? Thermometer : Gauge;
 
+              // Simple sparkline points (normalized to 0-20px height)
+              const values = a.sparklines || [0, 3, 5, 2, 6, 4];
+              const max = Math.max(...values, 1);
+              const points = values.map((v, i) => `${i * 10},${20 - (v / max) * 20}`).join(" ");
+
               return (
                 <div
                   key={a.id}
-                  className={`p-4 rounded-xl border-l-4 border-${color}-500 bg-gray-50 shadow-sm hover:shadow-md transition`}
+                  className={`flex items-center justify-between p-3 rounded-xl border-l-4 border-${color}-500 bg-gray-50 shadow-sm hover:shadow-md transition transform hover:-translate-y-0.5`}
                 >
-                  <div className="flex items-center gap-2 mb-1">
-                    <Icon size={16} className={`text-${color}-500`} />
-                    <span className="text-xs text-gray-500">{new Date(a.timestamp).toLocaleString()}</span>
+                  {/* Left: Icon + Info + Sparkline */}
+                  <div className="flex items-center gap-3">
+                    <div className={`flex items-center justify-center w-10 h-10 rounded-full bg-${color}-100`}>
+                      <Icon size={20} className={`text-${color}-600`} />
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="font-semibold text-gray-800 text-sm">{a.type}</span>
+                      <span className="text-xs text-gray-500">
+                        {new Date(a.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                      </span>
+                      {/* Mini sparkline */}
+                      <svg width="60" height="20" className="mt-1">
+                        <polyline
+                          fill="none"
+                          stroke={`var(--tw-${color}-500)`}
+                          strokeWidth="2"
+                          points={points}
+                        />
+                      </svg>
+                    </div>
                   </div>
-                  <div className="font-semibold text-gray-800">{a.type}</div>
-                  <div className="text-sm text-gray-600 mt-1">{a.cause || a.message || "-"}</div>
-                  <div className="text-sm mt-2">
-                    <span className="text-gray-500">Value:</span>{" "}
-                    <span className="font-medium">{a.derivedValue || "-"}</span>
-                  </div>
+
+                  {/* Right: Value badge */}
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium bg-${color}-100 text-${color}-700`}>
+                    {a.derivedValue || "-"}
+                  </span>
                 </div>
               );
             })}
           </div>
         )}
       </div>
+
+
+
 
       {/* Bottom Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
