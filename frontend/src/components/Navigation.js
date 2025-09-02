@@ -31,9 +31,12 @@ const Navigation = ({ user, currentPage, onPageChange, onLogout }) => {
 
     const pages = user.role === "DRIVER" ? driverPages : adminPages;
 
+    const activeClasses = "bg-gradient-to-r from-green-400 to-blue-500 text-white shadow-xl transform scale-105";
+    const inactiveClasses = "text-gray-600 hover:text-gray-900 hover:bg-gray-100";
+
     return (
         <nav className="fixed top-0 left-0 right-0 z-50">
-            {/* Glassmorphism Background */}
+            {/* Background */}
             <div className="absolute inset-0 bg-white/80 backdrop-blur-xl border-b border-white/20 shadow-lg" />
 
             <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -41,8 +44,8 @@ const Navigation = ({ user, currentPage, onPageChange, onLogout }) => {
                     {/* Branding */}
                     <div className="flex items-center gap-3 group cursor-pointer">
                         <div className="relative">
-                            <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg blur-sm opacity-75 group-hover:opacity-100 transition-opacity" />
-                            <div className="relative bg-gradient-to-r from-blue-600 to-purple-600 p-2 rounded-lg">
+                            <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-blue-500 rounded-lg blur-sm opacity-75 group-hover:opacity-100 transition-opacity" />
+                            <div className="relative bg-gradient-to-r from-green-400 to-blue-500 p-2 rounded-lg">
                                 <Car className="text-white" size={24} />
                             </div>
                         </div>
@@ -55,7 +58,7 @@ const Navigation = ({ user, currentPage, onPageChange, onLogout }) => {
                     </div>
 
                     {/* Desktop Navigation */}
-                    <div className="hidden md:flex items-center gap-1">
+                    <div className="hidden md:flex items-center gap-2">
                         {pages.map((page) => {
                             const Icon = page.icon;
                             const isActive = currentPage === page.id;
@@ -63,22 +66,19 @@ const Navigation = ({ user, currentPage, onPageChange, onLogout }) => {
                                 <button
                                     key={page.id}
                                     onClick={() => onPageChange(page.id)}
-                                    className={`relative flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 group ${isActive
-                                        ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg shadow-blue-500/25"
-                                        : "text-gray-600 hover:text-gray-900 hover:bg-white/50"
+                                    className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300
+          ${isActive
+                                            ? "bg-blue-500 text-white shadow-lg"  // ✅ Active page: solid background
+                                            : "text-gray-600 hover:text-gray-900 hover:bg-gray-100" // Inactive pages
                                         }`}
                                 >
-                                    {isActive && (
-                                        <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl blur-sm opacity-75" />
-                                    )}
-                                    <div className="relative flex items-center gap-2">
-                                        <Icon size={18} className={`transition-transform duration-300 ${isActive ? 'scale-110' : 'group-hover:scale-110'}`} />
-                                        {page.label}
-                                    </div>
+                                    <Icon size={18} className={isActive ? "text-white" : "text-gray-600"} />
+                                    <span>{page.label}</span>
                                 </button>
                             );
                         })}
                     </div>
+
 
                     {/* User Info & Logout */}
                     <div className="hidden md:flex items-center gap-4">
@@ -127,12 +127,10 @@ const Navigation = ({ user, currentPage, onPageChange, onLogout }) => {
                                         onPageChange(page.id);
                                         setMobileMenuOpen(false);
                                     }}
-                                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 ${isActive
-                                        ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg"
-                                        : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
-                                        }`}
+                                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300
+                    ${isActive ? activeClasses : inactiveClasses}`}
                                 >
-                                    <Icon size={20} className={isActive ? 'scale-110' : ''} />
+                                    <Icon size={20} className={isActive ? "text-white" : ""} />
                                     {page.label}
                                 </button>
                             );
@@ -154,7 +152,7 @@ const Navigation = ({ user, currentPage, onPageChange, onLogout }) => {
                 </div>
             )}
 
-            {/* Mobile Bottom Navigation (when menu is closed) */}
+            {/* Mobile Bottom Navigation */}
             {!mobileMenuOpen && (
                 <div className="md:hidden fixed bottom-4 left-4 right-4 bg-white/90 backdrop-blur-xl rounded-2xl border border-white/20 shadow-2xl">
                     <div className="flex items-center justify-around p-2">
@@ -165,12 +163,10 @@ const Navigation = ({ user, currentPage, onPageChange, onLogout }) => {
                                 <button
                                     key={page.id}
                                     onClick={() => onPageChange(page.id)}
-                                    className={`flex flex-col items-center p-2 rounded-xl transition-all duration-300 ${isActive
-                                        ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg"
-                                        : "text-gray-600 hover:text-gray-900"
-                                        }`}
+                                    className={`flex flex-col items-center p-2 rounded-xl transition-all duration-300
+                    ${isActive ? activeClasses : inactiveClasses}`}
                                 >
-                                    <Icon size={20} className={isActive ? 'scale-110' : ''} />
+                                    <Icon size={20} className={isActive ? "text-white scale-125" : ""} />
                                     <span className="text-xs mt-1 font-medium">{page.label}</span>
                                 </button>
                             );
